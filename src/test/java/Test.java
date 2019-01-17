@@ -32,10 +32,13 @@ public class Test {
         author2.setBirth_Year(19862);
         author2.setBiography("biogr2");
 
+        session.save(author);
         session.save(author2);
 
         Genre genre = new Genre();
         genre.setName("Blockbuster");
+
+        session.save(genre);
 
         Book book = new Book();
         book.setName("Potter");

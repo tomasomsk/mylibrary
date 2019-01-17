@@ -49,6 +49,7 @@ public class AbstractDao<T> {
         Session session = getCurrentSession();
         session.beginTransaction();
         session.delete(entity);
+        session.flush();
         session.getTransaction().commit();
     }
 

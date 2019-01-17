@@ -15,10 +15,10 @@ public class Book {
     private Long id;
     private String name;
     private Integer pub_Year;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(/*cascade = CascadeType.ALL,*/ fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id")
     private Genre genre;
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "books")
+    @ManyToMany(/*cascade = CascadeType.ALL, */mappedBy = "books")
     private List<Author> authors;
 
     public void addAuthor(Author author) {

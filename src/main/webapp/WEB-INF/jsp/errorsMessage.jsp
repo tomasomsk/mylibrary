@@ -3,7 +3,6 @@
 
 <b>Ups. There was some errors</b>
 
-
 <table border="1">
     <c:forEach items="${errors}" var="error">
         <tr>

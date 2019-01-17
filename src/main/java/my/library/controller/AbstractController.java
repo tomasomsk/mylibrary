@@ -10,7 +10,6 @@ import java.util.List;
 
 @Controller
 public class AbstractController {
-
     void rollbackAndAddErrorToModel(Model model, Exception exception, String objName, GenericDao dao) {
         dao.getCurrentSession().getTransaction().rollback();
         List<ObjectError> error = Collections.singletonList(
@@ -21,15 +20,4 @@ public class AbstractController {
                 ));
         model.addAttribute("errors", error);
     }
-
-    protected boolean performCheck(Model model, boolean condition, String objName, String codes, String message) {
-        if (condition) {
-            List<ObjectError> error = Collections.singletonList(new ObjectError(objName,
-                    new String[]{codes}, null, message));
-            model.addAttribute("errors", error);
-            return true;
-        }
-        return false;
-    }
-
 }

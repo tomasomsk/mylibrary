@@ -19,6 +19,7 @@ import java.util.List;
 @Controller
 public class AuthorController extends AbstractController {
 
+    public static final String AUTHOR = "Author";
     private GenericDao<Author> authorDao;
 
     @GetMapping("/library/authors")
@@ -35,18 +36,28 @@ public class AuthorController extends AbstractController {
 
     @GetMapping("/library/authors/author")
     public String showAuthor(@RequestParam(name = "id") Long id, Model model) {
-        Author author = authorDao.findById(id);
-        List<Book> books = author.getBooks();
-        model.addAttribute("author", author);
-        model.addAttribute("books", books);
-        return "author";
+        try {
+            Author author = authorDao.findById(id);
+            List<Book> books = author.getBooks();
+            model.addAttribute("author", author);
+            model.addAttribute("books", books);
+            return "author";
+        } catch (HibernateException e) {
+            rollbackAndAddErrorToModel(model, e, "Author", authorDao);
+            return "error";
+        }
     }
 
     @GetMapping("/library/authors/getaddform")
     public String getAddAuthorPage(Model model) {
-        Author author = new Author();
-        model.addAttribute("author", author);
-        return "authorAdd";
+        try {
+            Author author = new Author();
+            model.addAttribute("author", author);
+            return "authorAdd";
+        } catch (HibernateException e) {
+            rollbackAndAddErrorToModel(model, e, "Author", authorDao);
+            return "error";
+        }
     }
 
     @PostMapping("/library/authors/add")
@@ -68,9 +79,14 @@ public class AuthorController extends AbstractController {
 
     @GetMapping("/library/authors/getdeleteform")
     public String getDeleteAuthorPage(Model model) {
-        Author author = new Author();
-        model.addAttribute("author", author);
-        return "authorDelete";
+        try {
+            Author author = new Author();
+            model.addAttribute("author", author);
+            return "authorDelete";
+        } catch (HibernateException e) {
+            rollbackAndAddErrorToModel(model, e, "Author", authorDao);
+            return "error";
+        }
     }
 
     @PostMapping("/library/authors/delete")
@@ -86,7 +102,7 @@ public class AuthorController extends AbstractController {
             model.addAttribute("author", new Author());
             return "authorDeleteSuccess";
         } catch (HibernateException | IllegalArgumentException e) {
-            rollbackAndAddErrorToModel(model, e, "Author", authorDao);
+            rollbackAndAddErrorToModel(model, e, AUTHOR, authorDao);
             return "authorDeleteError";
         }
     }
