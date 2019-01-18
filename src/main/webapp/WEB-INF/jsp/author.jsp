@@ -1,4 +1,4 @@
-<jsp:include page="header.jsp"/>
+<%@ include file="header.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,10 +62,11 @@
     <c:forEach items="${books}" var="book">
         <tr>
             <td>
+                <a href="
                 <c:url value="/library/books/book">
                     <c:param name="id" value="${book.bookId}"/>
                 </c:url>
-                ${book.bookId}
+                ">${book.bookId}</a>
             </td>
             <td> ${book.name} </td>
             <td> ${book.genre.name} </td>

@@ -28,8 +28,7 @@
         <td><input type="submit" value="Add"/></td>
     </tr>
 
-    <input name="author_id" value="${author.authorId}"/>
-    ----
+    <input name="author_id" value="${author.authorId}" hidden=""/>
 
 </form:form>
 
