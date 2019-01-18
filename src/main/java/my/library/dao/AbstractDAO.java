@@ -2,6 +2,7 @@ package my.library.dao;
 
 import my.library.exception.DaoException;
 import org.hibernate.FlushMode;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.Resource;
 import java.util.List;
 
-public class AbstractDao<T> {
+public abstract class AbstractDAO<T> {
 
     private Class<T> clazz;
 
@@ -34,6 +35,7 @@ public class AbstractDao<T> {
         Session session = getCurrentSession();
         session.beginTransaction();
         session.persist(entity);
+        session.flush();
         session.getTransaction().commit();
     }
 
@@ -41,6 +43,7 @@ public class AbstractDao<T> {
         Session session = getCurrentSession();
         session.beginTransaction();
         T result = (T) session.merge(entity);
+        session.flush();
         session.getTransaction().commit();
         return result;
     }
@@ -57,6 +60,13 @@ public class AbstractDao<T> {
         Session session = sessionFactory.getCurrentSession();
         session.setFlushMode(FlushMode.MANUAL);
         return session;
+    }
+
+    public T findByName(String name) {
+        getCurrentSession().beginTransaction();
+        Query query = getCurrentSession().createQuery("from " + clazz.getName() + " where name=:name");
+        query.setParameter("name", name);
+        return (T) query.uniqueResult();
     }
 
     @Autowired

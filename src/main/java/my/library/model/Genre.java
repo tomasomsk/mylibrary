@@ -4,21 +4,22 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "GENRES")
+@Table(name = "genre")
 public class Genre {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long genre_id;
+    private Long genreId;
 
     private String name;
 
-    public Long getGenre_id() {
-        return genre_id;
+    public Long getGenreId() {
+        return genreId;
     }
 
-    public void setGenre_id(Long genre_id) {
-        this.genre_id = genre_id;
+    public void setGenreId(Long genre_id) {
+        this.genreId = genre_id;
     }
 
     public String getName() {
@@ -34,12 +35,12 @@ public class Genre {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Genre genre = (Genre) o;
-        return Objects.equals(genre_id, genre.genre_id) &&
+        return Objects.equals(genreId, genre.genreId) &&
                 Objects.equals(name, genre.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(genre_id, name);
+        return Objects.hash(genreId, name);
     }
 }

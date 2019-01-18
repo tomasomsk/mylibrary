@@ -6,19 +6,20 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "BOOKS")
+@Table(name = "book")
 public class Book {
 
     @Id
-    @Column(name = "book_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long bookId;
     private String name;
-    private Integer pub_Year;
-    @OneToOne(/*cascade = CascadeType.ALL,*/ fetch = FetchType.LAZY)
+    @Column(name = "pub_year")
+    private Integer pubYear;
+    @OneToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "genre_id")
     private Genre genre;
-    @ManyToMany(/*cascade = CascadeType.ALL, */mappedBy = "books")
+    @ManyToMany(cascade = {CascadeType.PERSIST}, mappedBy = "books")
     private List<Author> authors;
 
     public void addAuthor(Author author) {
@@ -35,12 +36,12 @@ public class Book {
         authors.remove(author);
     }
 
-    public Long getId() {
-        return id;
+    public Long getBookId() {
+        return bookId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBookId(Long id) {
+        this.bookId = id;
     }
 
     public String getName() {
@@ -51,12 +52,12 @@ public class Book {
         this.name = name;
     }
 
-    public Integer getPub_Year() {
-        return pub_Year;
+    public Integer getPubYear() {
+        return pubYear;
     }
 
-    public void setPub_Year(Integer pub_Year) {
-        this.pub_Year = pub_Year;
+    public void setPubYear(Integer pub_Year) {
+        this.pubYear = pub_Year;
     }
 
     public Genre getGenre() {
@@ -80,7 +81,7 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return pub_Year == book.pub_Year &&
+        return pubYear.equals(book.pubYear)&&
                 Objects.equals(name, book.name) &&
                 Objects.equals(genre, book.genre) &&
                 Objects.equals(authors, book.authors);
@@ -88,6 +89,6 @@ public class Book {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, pub_Year, genre, authors);
+        return Objects.hash(name, pubYear, genre, authors);
     }
 }

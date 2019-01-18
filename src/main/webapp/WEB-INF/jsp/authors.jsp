@@ -27,13 +27,13 @@
         <tr>
             <td><a href="
                    <c:url value="/library/authors/author">
-                       <c:param name="id" value="${author.id}"/>
+                       <c:param name="id" value="${author.authorId}"/>
                    </c:url>
-                   ">${author.id}</a>
+                   ">${author.authorId}</a>
             </td>
-            <td> ${author.second_Name} </td>
+            <td> ${author.secondName} </td>
             <td> ${author.name} </td>
-            <td> ${author.third_Name} </td
+            <td> ${author.thirdName} </td
         </tr>
     </c:forEach>
 </table>

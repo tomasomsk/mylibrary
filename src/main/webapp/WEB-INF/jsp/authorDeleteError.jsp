@@ -20,7 +20,7 @@
     <table>
         <tr>
             <td><form:label path="id">Author ID</form:label></td>
-            <td><form:input path="id"/></td>
+            <td><form:input path="authorId"/></td>
         </tr>
         <tr>
             <td><input type="submit" value="Delete"/></td>

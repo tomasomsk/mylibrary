@@ -1,6 +1,6 @@
 package my.library.controller;
 
-import my.library.dao.GenericDao;
+import my.library.dao.GenericDAO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.ObjectError;
@@ -9,8 +9,8 @@ import java.util.Collections;
 import java.util.List;
 
 @Controller
-public class AbstractController {
-    void rollbackAndAddErrorToModel(Model model, Exception exception, String objName, GenericDao dao) {
+public abstract class AbstractController {
+    void rollbackAndAddErrorToModel(Model model, Exception exception, String objName, GenericDAO dao) {
         dao.getCurrentSession().getTransaction().rollback();
         List<ObjectError> error = Collections.singletonList(
                 new ObjectError(objName,

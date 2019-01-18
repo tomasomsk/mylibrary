@@ -1,29 +1,30 @@
 package my.library.model;
 
 
-import org.springframework.stereotype.Component;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "AUTHORS")
+@Table(name = "author")
 public class Author {
 
     @Id
-    @Column(name = "author_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long authorId;
     private String name;
-    private String second_Name;
-    private String third_Name;
-    private Integer birth_Year;
+    @Column(name = "second_name")
+    private String secondName;
+    @Column(name = "third_name")
+    private String thirdName;
+    @Column(name = "birth_year")
+    private Integer birthYear;
     private String biography;
-    @ManyToMany(/*cascade = {CascadeType.ALL}*/)
+    @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(
-            name = "AUTHORS_BOOKS",
+            name = "author_book",
             joinColumns = {@JoinColumn(name = "author_id")},
             inverseJoinColumns = {@JoinColumn(name = "book_id")}
     )
@@ -43,12 +44,12 @@ public class Author {
         books.remove(book);
     }
 
-    public Long getId() {
-        return id;
+    public Long getAuthorId() {
+        return authorId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setAuthorId(Long id) {
+        this.authorId = id;
     }
 
     public String getName() {
@@ -59,28 +60,28 @@ public class Author {
         this.name = name;
     }
 
-    public String getSecond_Name() {
-        return second_Name;
+    public String getSecondName() {
+        return secondName;
     }
 
-    public void setSecond_Name(String second_Name) {
-        this.second_Name = second_Name;
+    public void setSecondName(String second_Name) {
+        this.secondName = second_Name;
     }
 
-    public String getThird_Name() {
-        return third_Name;
+    public String getThirdName() {
+        return thirdName;
     }
 
-    public void setThird_Name(String third_Name) {
-        this.third_Name = third_Name;
+    public void setThirdName(String third_Name) {
+        this.thirdName = third_Name;
     }
 
-    public Integer getBirth_Year() {
-        return birth_Year;
+    public Integer getBirthYear() {
+        return birthYear;
     }
 
-    public void setBirth_Year(Integer birth_Year) {
-        this.birth_Year = birth_Year;
+    public void setBirthYear(Integer birth_Year) {
+        this.birthYear = birth_Year;
     }
 
     public String getBiography() {
@@ -104,16 +105,16 @@ public class Author {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Author author = (Author) o;
-        return birth_Year.equals(author.birth_Year) &&
+        return birthYear.equals(author.birthYear) &&
                 Objects.equals(name, author.name) &&
-                Objects.equals(second_Name, author.second_Name) &&
-                Objects.equals(third_Name, author.third_Name) &&
+                Objects.equals(secondName, author.secondName) &&
+                Objects.equals(thirdName, author.thirdName) &&
                 Objects.equals(biography, author.biography) &&
                 Objects.equals(books, author.books);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, second_Name, third_Name, birth_Year, biography, books);
+        return Objects.hash(name, secondName, thirdName, birthYear, biography, books);
     }
 }

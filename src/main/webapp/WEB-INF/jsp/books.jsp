@@ -25,9 +25,9 @@
         <tr>
             <td><a href="
                    <c:url value="/library/books/book">
-                       <c:param name="id" value="${book.id}"/>
+                       <c:param name="id" value="${book.bookId}"/>
                    </c:url>
-                   ">${book.id}</a>
+                   ">${book.bookId}</a>
             </td>
             <td> ${book.name} </td>
             <td> ${book.genre.name} </td

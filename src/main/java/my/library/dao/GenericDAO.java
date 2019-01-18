@@ -4,7 +4,7 @@ import org.hibernate.Session;
 
 import java.util.List;
 
-public interface GenericDao<T> {
+public interface GenericDAO<T> {
 
     List<T> findAll();
 
@@ -17,5 +17,7 @@ public interface GenericDao<T> {
     void delete(T entity);
 
     Session getCurrentSession();
+
+    T findByName(String name);
 
 }

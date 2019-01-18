@@ -1,5 +1,5 @@
+<%@ include file="header.jsp" %>
 <!DOCTYPE html>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html lang="en">
 <head>
     <title>Add Author</title>

@@ -1,7 +1,7 @@
 package my.library.controller;
 
-import my.library.dao.GenericDao;
-import my.library.dao.GenreDao;
+import my.library.dao.GenericDAO;
+import my.library.model.Author;
 import my.library.model.Book;
 import my.library.model.Genre;
 import org.hibernate.HibernateException;
@@ -22,8 +22,9 @@ import java.util.stream.Collectors;
 public class BookController extends AbstractController {
 
     public static final String BOOK = "Book";
-    private GenericDao<Book> bookDao;
-    private GenericDao<Genre> genreDao;
+    private GenericDAO<Book> bookDao;
+    private GenericDAO<Genre> genreDao;
+    private GenericDAO<Author> authorDao;
 
     @GetMapping("/library/books")
     public String showBooks(Model model) {
@@ -32,7 +33,7 @@ public class BookController extends AbstractController {
             model.addAttribute("books", books);
             return "books";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, "Book", bookDao);
+            rollbackAndAddErrorToModel(model, e, BOOK, bookDao);
             return "error";
         }
     }
@@ -44,7 +45,7 @@ public class BookController extends AbstractController {
             model.addAttribute("book", book);
             return "book";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, "Book", bookDao);
+            rollbackAndAddErrorToModel(model, e, BOOK, bookDao);
             return "error";
         }
     }
@@ -57,7 +58,7 @@ public class BookController extends AbstractController {
             model.addAttribute("genres", genreDao.findAll().stream().map(Genre::getName).collect(Collectors.toList()));
             return "bookAdd";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, "Book", bookDao);
+            rollbackAndAddErrorToModel(model, e, BOOK, bookDao);
             return "error";
         }
     }
@@ -69,17 +70,17 @@ public class BookController extends AbstractController {
             model.addAttribute("errors", result.getAllErrors());
             return "bookAddError";
         }
-         try {
-             Genre genre = ((GenreDao) genreDao).findByName(book.getGenre().getName());
-             book.setGenre(genre);
-             bookDao.create(book);
-             model.addAttribute("book", new Book());
-             model.addAttribute("genres", genreDao.findAll().stream().map(Genre::getName).collect(Collectors.toList()));
-             return "bookAddSuccess";
-         } catch (HibernateException e) {
-             rollbackAndAddErrorToModel(model, e, "Book", bookDao);
-             return "bookAddError";
-         }
+        try {
+            Genre genre = genreDao.findByName(book.getGenre().getName());
+            book.setGenre(genre);
+            bookDao.create(book);
+            model.addAttribute("book", new Book());
+            model.addAttribute("genres", genreDao.findAll().stream().map(Genre::getName).collect(Collectors.toList()));
+            return "bookAddSuccess";
+        } catch (HibernateException e) {
+            rollbackAndAddErrorToModel(model, e, BOOK, bookDao);
+            return "bookAddError";
+        }
     }
 
     @GetMapping("/library/books/getdeleteform")
@@ -89,20 +90,20 @@ public class BookController extends AbstractController {
             model.addAttribute("book", book);
             return "bookDelete";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, "Book", bookDao);
+            rollbackAndAddErrorToModel(model, e, BOOK, bookDao);
             return "error";
         }
     }
 
     @PostMapping("/library/books/delete")
     public String deleteBook(@Valid @ModelAttribute("book") Book book,
-                               BindingResult result, Model model) {
+                             BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("errors", result.getAllErrors());
             return "bookDeleteError";
         }
         try {
-            Book bookToDelete = bookDao.findById(book.getId());
+            Book bookToDelete = bookDao.findById(book.getBookId());
             bookDao.delete(bookToDelete);
             model.addAttribute("book", new Book());
             return "bookDeleteSuccess";
@@ -113,12 +114,17 @@ public class BookController extends AbstractController {
     }
 
     @Autowired
-    public void setBookDao(GenericDao<Book> bookDao) {
+    public void setBookDao(GenericDAO<Book> bookDao) {
         this.bookDao = bookDao;
     }
 
     @Autowired
-    public void setGenreDao(GenericDao<Genre> genreDao) {
+    public void setGenreDao(GenericDAO<Genre> genreDao) {
         this.genreDao = genreDao;
+    }
+
+    @Autowired
+    public void setAuthorDao(GenericDAO<Author> authorDao) {
+        this.authorDao = authorDao;
     }
 }

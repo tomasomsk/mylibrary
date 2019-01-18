@@ -1,5 +1,4 @@
-<!DOCTYPE HTML>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="header.jsp" %>
 <html lang="en">
 <head>
     <title>Genres</title>
@@ -24,13 +23,24 @@
         <tr>
             <td><a href="
                    <c:url value="/library/genres/genre">
-                       <c:param name="id" value="${genre.genre_id}"/>
+                       <c:param name="id" value="${genre.genreId}"/>
                    </c:url>
-                   ">${genre.genre_id}</a>
+                   ">${genre.genreId}</a>
             </td>
             <td> ${genre.name} </td>
         </tr>
     </c:forEach>
+
+    <br/>
+
+    <table border="0" style="border-spacing: 15px">
+        <tr>
+            <td><input type="button" value="Add Genre" onclick="window.location='/library/genres/getCrudForm?opr=add';"></td>
+            <td></td>
+            <td><input type="button" value="Delete Genre" onclick="window.location='/library/genres/getCrudForm?opr=delete';"></td>
+        </tr>
+    </table>
+
 </table>
 </body>
 </html>

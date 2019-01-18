@@ -24,14 +24,14 @@
     <tr>
         <td> ${book.name} </td>
         <td> ${book.genre.name} </td>
-        <td> ${book.pub_Year} </td>
+        <td> ${book.pubYear} </td>
         <td>
             <c:forEach items="${book.authors}" var="author">
                 <a href="
                    <c:url value="/library/authors/author">
-                       <c:param name="id" value="${author.id}"/>
+                       <c:param name="id" value="${author.authorId}"/>
                    </c:url>
-                   ">${author.second_Name} ${author.name} ${author.third_Name} <br/></a>
+                   ">${author.secondName} ${author.name} ${author.thirdName} <br/></a>
             </c:forEach>
         </td>
     </tr>
