@@ -19,7 +19,7 @@ public class Book {
     @OneToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "genre_id")
     private Genre genre;
-    @ManyToMany(cascade = {CascadeType.PERSIST}, mappedBy = "books")
+    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER, mappedBy = "books")
     private List<Author> authors;
 
     public void addAuthor(Author author) {

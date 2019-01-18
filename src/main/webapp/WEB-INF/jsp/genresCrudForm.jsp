@@ -36,23 +36,17 @@
 
 <br/>
 
-<c:if test="${errors != null}">
-    <c:choose>
-        <c:when test="${errors == 'no'}">
-            <b><c:out value='Congratulations. Genre added'/></b>
-        </c:when>
-        <c:otherwise>
-            <b><c:out value='Ups. There was some errors'/></b>
-            <table border="1">
-                <c:forEach items="${errors}" var="error">
-                    <tr>
-                        <td>${error.code}</td>
-                        <td>${error.defaultMessage}</td>
-                    </tr>
-                </c:forEach>
-            </table>
-        </c:otherwise>
-    </c:choose>
+<b><c:out value="${msg}"/></b>
+
+<c:if test="${not empty errors}">
+    <table border="1">
+        <c:forEach items="${errors}" var="error">
+            <tr>
+                <td>${error.code}</td>
+                <td>${error.defaultMessage}</td>
+            </tr>
+        </c:forEach>
+    </table>
 </c:if>
 
 </body>

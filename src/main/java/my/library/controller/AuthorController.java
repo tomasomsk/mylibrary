@@ -6,6 +6,7 @@ import my.library.model.Book;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +20,11 @@ import java.util.List;
 @Controller
 public class AuthorController extends AbstractController {
 
-    public static final String AUTHOR = "Author";
+    private static final String AUTHOR = "Author";
     private GenericDAO<Author> authorDao;
     private GenericDAO<Book> bookDao;
 
+    @Transactional
     @GetMapping("/library/authors")
     public String showAuthors(Model model) {
         try {
@@ -30,11 +32,12 @@ public class AuthorController extends AbstractController {
             model.addAttribute("authors", authors);
             return "authors";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, AUTHOR, authorDao);
+            addErrorToModel(model, e, AUTHOR);
             return "error";
         }
     }
 
+    @Transactional
     @GetMapping("/library/authors/author")
     public String showAuthor(@RequestParam(name = "id") Long id, Model model) {
         try {
@@ -44,11 +47,12 @@ public class AuthorController extends AbstractController {
             model.addAttribute("books", books);
             return "author";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, AUTHOR, authorDao);
+            addErrorToModel(model, e, AUTHOR);
             return "error";
         }
     }
 
+    @Transactional
     @GetMapping("/library/authors/getaddform")
     public String getAddAuthorPage(Model model) {
         try {
@@ -56,11 +60,12 @@ public class AuthorController extends AbstractController {
             model.addAttribute("author", author);
             return "authorAdd";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, AUTHOR, authorDao);
+            addErrorToModel(model, e, AUTHOR);
             return "error";
         }
     }
 
+    @Transactional
     @PostMapping("/library/authors/add")
     public String addAuthor(@Valid @ModelAttribute("author") Author author,
                             BindingResult result, Model model) {
@@ -73,11 +78,12 @@ public class AuthorController extends AbstractController {
             model.addAttribute("author", new Author());
             return "authorAddSuccess";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, AUTHOR, authorDao);
+            addErrorToModel(model, e, AUTHOR);
             return "authorAddError";
         }
     }
 
+    @Transactional
     @GetMapping("/library/authors/getdeleteform")
     public String getDeleteAuthorPage(Model model) {
         try {
@@ -85,11 +91,12 @@ public class AuthorController extends AbstractController {
             model.addAttribute("author", author);
             return "authorDelete";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, AUTHOR, authorDao);
+            addErrorToModel(model, e, AUTHOR);
             return "error";
         }
     }
 
+    @Transactional
     @PostMapping("/library/authors/delete")
     public String deleteAuthor(@Valid @ModelAttribute("author") Author author,
                                BindingResult result, Model model) {
@@ -103,11 +110,12 @@ public class AuthorController extends AbstractController {
             model.addAttribute("author", new Author());
             return "authorDeleteSuccess";
         } catch (HibernateException | IllegalArgumentException e) {
-            rollbackAndAddErrorToModel(model, e, AUTHOR, authorDao);
+            addErrorToModel(model, e, AUTHOR);
             return "authorDeleteError";
         }
     }
 
+    @Transactional
     @GetMapping("/library/author/getAuthorAddBookForm")
     public String getAddBookToAuthorPage(@RequestParam(name = "authorid") Long id, Model model) {
         try {
@@ -118,11 +126,12 @@ public class AuthorController extends AbstractController {
             model.addAttribute("author", author);
             return "authorAddBook";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, AUTHOR, authorDao);
+            addErrorToModel(model, e, AUTHOR);
             return "error";
         }
     }
 
+    @Transactional
     @PostMapping("/library/author/addBook")
     public String addBookToAuthor(@Valid @RequestParam("author_id") long author_id,
                                   @Valid @RequestParam("book_id") long book_id,
@@ -134,7 +143,7 @@ public class AuthorController extends AbstractController {
             authorDao.update(author);
             return "authorAddBookSuccess";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, AUTHOR, authorDao);
+            addErrorToModel(model, e, AUTHOR);
             return "authorAddBookError";
         }
     }

@@ -1,5 +1,6 @@
 <jsp:include page="header.jsp"/>
-<jsp:include page="taglibs.jsp"/>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <title>Author</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -60,11 +61,11 @@
 
     <c:forEach items="${books}" var="book">
         <tr>
-            <td><a href="
-                   <c:url value="/library/books/book">
-                       <c:param name="id" value="${book.bookId}"/>
-                   </c:url>
-                   ">${book.bookId}</a>
+            <td>
+                <c:url value="/library/books/book">
+                    <c:param name="id" value="${book.bookId}"/>
+                </c:url>
+                ${book.bookId}
             </td>
             <td> ${book.name} </td>
             <td> ${book.genre.name} </td>

@@ -10,8 +10,7 @@ import java.util.List;
 
 @Controller
 public abstract class AbstractController {
-    void rollbackAndAddErrorToModel(Model model, Exception exception, String objName, GenericDAO dao) {
-        dao.getCurrentSession().getTransaction().rollback();
+    void addErrorToModel(Model model, Exception exception, String objName) {
         List<ObjectError> error = Collections.singletonList(
                 new ObjectError(objName,
                         new String[]{exception.getCause() == null ? exception.getClass().getCanonicalName() : exception.getMessage()},

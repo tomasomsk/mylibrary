@@ -7,6 +7,7 @@ import my.library.model.Genre;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +22,11 @@ import java.util.stream.Collectors;
 @Controller
 public class BookController extends AbstractController {
 
-    public static final String BOOK = "Book";
+    private static final String BOOK = "Book";
     private GenericDAO<Book> bookDao;
     private GenericDAO<Genre> genreDao;
-    private GenericDAO<Author> authorDao;
 
+    @Transactional
     @GetMapping("/library/books")
     public String showBooks(Model model) {
         try {
@@ -33,11 +34,12 @@ public class BookController extends AbstractController {
             model.addAttribute("books", books);
             return "books";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, BOOK, bookDao);
+            addErrorToModel(model, e, BOOK);
             return "error";
         }
     }
 
+    @Transactional
     @GetMapping("/library/books/book")
     public String showBook(@RequestParam(name = "id") Long id, Model model) {
         try {
@@ -45,11 +47,12 @@ public class BookController extends AbstractController {
             model.addAttribute("book", book);
             return "book";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, BOOK, bookDao);
+            addErrorToModel(model, e, BOOK);
             return "error";
         }
     }
 
+    @Transactional
     @GetMapping("/library/books/getaddform")
     public String getAddBookPage(Model model) {
         try {
@@ -58,11 +61,12 @@ public class BookController extends AbstractController {
             model.addAttribute("genres", genreDao.findAll().stream().map(Genre::getName).collect(Collectors.toList()));
             return "bookAdd";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, BOOK, bookDao);
+            addErrorToModel(model, e, BOOK);
             return "error";
         }
     }
 
+    @Transactional
     @PostMapping("/library/books/add")
     public String addBook(@Valid @ModelAttribute("book") Book book,
                           BindingResult result, Model model) {
@@ -78,11 +82,12 @@ public class BookController extends AbstractController {
             model.addAttribute("genres", genreDao.findAll().stream().map(Genre::getName).collect(Collectors.toList()));
             return "bookAddSuccess";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, BOOK, bookDao);
+            addErrorToModel(model, e, BOOK);
             return "bookAddError";
         }
     }
 
+    @Transactional
     @GetMapping("/library/books/getdeleteform")
     public String getDeleteBookPage(Model model) {
         try {
@@ -90,11 +95,12 @@ public class BookController extends AbstractController {
             model.addAttribute("book", book);
             return "bookDelete";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, BOOK, bookDao);
+            addErrorToModel(model, e, BOOK);
             return "error";
         }
     }
 
+    @Transactional
     @PostMapping("/library/books/delete")
     public String deleteBook(@Valid @ModelAttribute("book") Book book,
                              BindingResult result, Model model) {
@@ -108,7 +114,7 @@ public class BookController extends AbstractController {
             model.addAttribute("book", new Book());
             return "bookDeleteSuccess";
         } catch (HibernateException | IllegalArgumentException e) {
-            rollbackAndAddErrorToModel(model, e, BOOK, bookDao);
+            addErrorToModel(model, e, BOOK);
             return "bookDeleteError";
         }
     }
@@ -121,10 +127,5 @@ public class BookController extends AbstractController {
     @Autowired
     public void setGenreDao(GenericDAO<Genre> genreDao) {
         this.genreDao = genreDao;
-    }
-
-    @Autowired
-    public void setAuthorDao(GenericDAO<Author> authorDao) {
-        this.authorDao = authorDao;
     }
 }

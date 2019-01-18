@@ -22,7 +22,7 @@ public class Author {
     @Column(name = "birth_year")
     private Integer birthYear;
     private String biography;
-    @ManyToMany(cascade = {CascadeType.PERSIST})
+    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "author_book",
             joinColumns = {@JoinColumn(name = "author_id")},

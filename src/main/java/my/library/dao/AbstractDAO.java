@@ -1,7 +1,6 @@
 package my.library.dao;
 
 import my.library.exception.DaoException;
-import org.hibernate.FlushMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,48 +21,46 @@ public abstract class AbstractDAO<T> {
     }
 
     public List<T> findAll() {
-        getCurrentSession().beginTransaction();
         return getCurrentSession().createQuery("from " + clazz.getName()).list();
     }
 
     public T findById(Long id) {
-        getCurrentSession().beginTransaction();
         return (T) getCurrentSession().get(clazz, id);
     }
 
     public void create(T entity)  {
         Session session = getCurrentSession();
-        session.beginTransaction();
+//        session.beginTransaction();
         session.persist(entity);
-        session.flush();
-        session.getTransaction().commit();
+//        session.flush();
+//        session.getTransaction().commit();
     }
 
     public T update(T entity) {
         Session session = getCurrentSession();
-        session.beginTransaction();
+//        session.beginTransaction();
         T result = (T) session.merge(entity);
-        session.flush();
-        session.getTransaction().commit();
+//        session.flush();
+//        session.getTransaction().commit();
         return result;
     }
 
     public void delete(T entity) throws DaoException {
         Session session = getCurrentSession();
-        session.beginTransaction();
+//        session.beginTransaction();
         session.delete(entity);
-        session.flush();
-        session.getTransaction().commit();
+//        session.flush();
+//        session.getTransaction().commit();
     }
 
     public final Session getCurrentSession() {
         Session session = sessionFactory.getCurrentSession();
-        session.setFlushMode(FlushMode.MANUAL);
+//        session.setFlushMode(FlushMode.MANUAL);
         return session;
     }
 
     public T findByName(String name) {
-        getCurrentSession().beginTransaction();
+//        getCurrentSession().beginTransaction();
         Query query = getCurrentSession().createQuery("from " + clazz.getName() + " where name=:name");
         query.setParameter("name", name);
         return (T) query.uniqueResult();

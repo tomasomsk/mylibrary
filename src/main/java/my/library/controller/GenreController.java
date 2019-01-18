@@ -5,6 +5,7 @@ import my.library.model.Genre;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,23 +19,37 @@ import java.util.List;
 @Controller
 public class GenreController extends AbstractController {
 
-    public static final String GENRE = "Genre";
+    private static final String GENRE = "Genre";
     private GenericDAO<Genre> genreDao;
 
+    @Transactional
     @GetMapping("/library/genres")
     public String getGenres(Model model) {
-        List<Genre> genres = genreDao.findAll();
-        model.addAttribute("genres", genres);
-        return "genres";
+        try {
+            List<Genre> genres = genreDao.findAll();
+            model.addAttribute("genres", genres);
+            return "genres";
+        } catch (HibernateException e) {
+            addErrorToModel(model, e, GENRE);
+            return "error";
+        }
     }
 
+    @Transactional
     @GetMapping("/library/genres/genre")
-    public String showGenre(@RequestParam(name="id") Long id, Model model) {
-        Genre genre = genreDao.findById(id);
-        model.addAttribute("genre", genre);
-        return "genre";
+    public String showGenre(@RequestParam(name = "id") Long id, Model model) {
+        try {
+            Genre genre = genreDao.findById(id);
+            model.addAttribute("genre", genre);
+            return "genre";
+        } catch (HibernateException e) {
+            addErrorToModel(model, e, GENRE);
+            return "error";
+        }
+
     }
 
+    @Transactional
     @GetMapping("/library/genres/getCrudForm")
     public String getCrudForm(@RequestParam("opr") String operation, Model model) {
         try {
@@ -43,11 +58,12 @@ public class GenreController extends AbstractController {
             model.addAttribute("operation", operation);
             return "genresCrudForm";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, GENRE, genreDao);
+            addErrorToModel(model, e, GENRE);
             return "error";
         }
     }
 
+    @Transactional
     @PostMapping("/library/genres/add")
     public String addGenre(@Valid @ModelAttribute Genre genre, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -57,12 +73,32 @@ public class GenreController extends AbstractController {
         try {
             genreDao.create(genre);
             model.addAttribute("genre", new Genre());
-            model.addAttribute("errors", "no");
             model.addAttribute("operation", "add");
+            model.addAttribute("msg", "Congratulations. Genre added");
             return "genresCrudForm";
         } catch (HibernateException e) {
-            rollbackAndAddErrorToModel(model, e, GENRE, genreDao);
+            model.addAttribute("msg", "Ups. There was some errors");
+            addErrorToModel(model, e, GENRE);
             return "genresCrudForm";
+        }
+    }
+
+    @Transactional
+    @PostMapping("/library/genres/delete")
+    public String deleteAuthor(@Valid @ModelAttribute("genre") Genre genre,
+                               BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result.getAllErrors());
+            return "authorDeleteError";
+        }
+        try {
+            Genre genreToDelete = genreDao.findById(genre.getGenreId());
+            genreDao.delete(genreToDelete);
+            model.addAttribute("author", new Genre());
+            return "authorDeleteSuccess";
+        } catch (HibernateException | IllegalArgumentException e) {
+            addErrorToModel(model, e, GENRE);
+            return "authorDeleteError";
         }
     }
 

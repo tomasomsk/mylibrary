@@ -1,5 +1,5 @@
+<%@ include file="header.jsp" %>
 <!DOCTYPE html>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <html lang="en">
 <head>
     <title>Delete Author</title>
@@ -16,7 +16,7 @@
 
     <table>
         <tr>
-            <td><form:label path="id">Author ID</form:label></td>
+            <td><form:label path="authorId">Author ID</form:label></td>
             <td><form:input path="authorId"/></td>
         </tr>
         <tr>
