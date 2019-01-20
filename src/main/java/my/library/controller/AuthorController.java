@@ -4,6 +4,7 @@ import my.library.dao.GenericDAO;
 import my.library.model.Author;
 import my.library.model.Book;
 import org.hibernate.HibernateException;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,7 +78,7 @@ public class AuthorController extends AbstractController {
             authorDao.create(author);
             model.addAttribute("author", new Author());
             return "authorAddSuccess";
-        } catch (HibernateException e) {
+        } catch (Exception e) {
             addErrorToModel(model, e, AUTHOR);
             return "authorAddError";
         }

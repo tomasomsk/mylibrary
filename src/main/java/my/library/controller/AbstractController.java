@@ -1,6 +1,5 @@
 package my.library.controller;
 
-import my.library.dao.GenericDAO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.ObjectError;
@@ -11,11 +10,18 @@ import java.util.List;
 @Controller
 public abstract class AbstractController {
     void addErrorToModel(Model model, Exception exception, String objName) {
+        Throwable cause = null;
+        if (exception.getCause() != null) {
+            cause = exception.getCause();
+            while (cause.getCause() != null) {
+                cause = cause.getCause();
+            }
+        }
         List<ObjectError> error = Collections.singletonList(
                 new ObjectError(objName,
-                        new String[]{exception.getCause() == null ? exception.getClass().getCanonicalName() : exception.getMessage()},
+                        new String[]{cause == null ? exception.getClass().getCanonicalName() : exception.getMessage()},
                         null,
-                        exception.getCause() == null ? exception.getMessage() : exception.getCause().getMessage()
+                        cause == null ? exception.getMessage() : cause.getMessage()
                 ));
         model.addAttribute("errors", error);
     }

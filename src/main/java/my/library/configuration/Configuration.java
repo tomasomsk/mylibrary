@@ -22,28 +22,6 @@ import java.util.Properties;
 @org.springframework.context.annotation.Configuration
 @EnableTransactionManagement
 public class Configuration {
-//    @Bean
-//    public SessionFactory sessionFactory() {
-//        return new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
-//    }
-//
-//    @Bean
-//    public static DataSource getDataSource() {
-//        BasicDataSource dataSource = new BasicDataSource();
-//        dataSource.setDriverClassName("org.postgresql.Driver");
-//        dataSource.setUrl("jdbc:postgresql://localhost:5431/library");
-//        dataSource.setUsername("postgres");
-//        dataSource.setPassword("postgres");
-//        return dataSource;
-//    }
-//    private static Properties setHibernateProperties() {
-//        Properties properties = new Properties();
-//        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-//        properties.put("hibernate.hbm2ddl.auto", "create");
-//        properties.put("hibernate.show_sql", "true");
-//        return properties;
-//    }
-
     @Bean
     public GenericDAO<Author> authorDao() {
         return new AuthorDAO();
@@ -84,7 +62,7 @@ public class Configuration {
     }
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL82Dialect");
         properties.put("hibernate.hbm2ddl.auto", "validate");
         properties.put("hibernate.show_sql", true);
         return properties;
@@ -94,7 +72,7 @@ public class Configuration {
     DriverManagerDataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5431/library");
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/mylibrary");
         dataSource.setUsername("postgres");
         dataSource.setPassword("postgres");
         return dataSource;

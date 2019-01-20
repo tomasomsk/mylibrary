@@ -28,7 +28,7 @@ public abstract class AbstractDAO<T> {
         return (T) getCurrentSession().get(clazz, id);
     }
 
-    public void create(T entity)  {
+    public void create(T entity) {
         Session session = getCurrentSession();
 //        session.beginTransaction();
         session.persist(entity);
@@ -53,7 +53,7 @@ public abstract class AbstractDAO<T> {
 //        session.getTransaction().commit();
     }
 
-    public final Session getCurrentSession() {
+    Session getCurrentSession() {
         Session session = sessionFactory.getCurrentSession();
 //        session.setFlushMode(FlushMode.MANUAL);
         return session;
